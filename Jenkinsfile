@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Checkout Source') {
       steps {
-        git 'https://github.com/AmrTarek77/Deploying-a-Dockerized-Application-to-the-Kubernetes-Cluster-using-Jenkins'
+        git 'https://github.com/AmrTarek77/Deploying-a-Dockerized-Application-to-the-Kubernetes-Cluster-using-Jenkins.git'
       }
     }
     stage('Build image') {
