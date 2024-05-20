@@ -7,24 +7,24 @@ pipeline {
   stages {
     stage('Checkout Source') {
       steps {
-        git 'https://github.com/AmrTarek77/Deploying-a-Dockerized-Application-to-the-Kubernetes-Cluster-using-Jenkins'
+        git 'https://github.com/AmrTarek77/Deploying-a-Dockerized-Application-to-the-Kubernetes-Cluster-using-Jenkins', branch: 'main'
       }
     }
     stage('Build image') {
       steps{
         script {
-          dockerImage = docker.build dockerimagename
+          dockerImage = docker.build "${dockerimagename}", '.'
         }
       }
     }
     stage('Pushing Image') {
       environment {
-          registryCredential = 'dockerhub-credentials'
+          registryCredential = credentials('dockerhub-credentials')
            }
       steps{
         script {
           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
+            dockerImage.push()
           }
         }
       }
@@ -32,8 +32,7 @@ pipeline {
     stage('Deploying React.js container to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: "deployment.yaml", 
-                                         "service.yaml")
+          kubernetesDeploy(configs: ["deployment.yaml", "service.yaml"], cluster: 'my-kubernetes-cluster')
         }
       }
     }
